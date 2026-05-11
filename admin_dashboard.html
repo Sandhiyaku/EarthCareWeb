@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="glass-card">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 style="color: #2E7D32;"><i class="fas fa-user-shield me-2"></i>Admin Control Panel</h2>
+                        <p class="text-muted mb-0">Monitor and manage waste collection logistics.</p>
+                    </div>
+                    <div class="text-end">
+                        <span class="badge bg-success p-2 px-3 rounded-pill">System Online</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="glass-card shadow-sm">
+        <h4 class="mb-4" style="color: #2E7D32;"><i class="fas fa-clipboard-list me-2"></i>Active Collection Requests</h4>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Customer</th>
+                        <th>Waste Details</th>
+                        <th>Pickup Address</th>
+                        <th>Current Status</th>
+                        <th>Assign Worker</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in bookings %}
+                    <tr>
+                        <td>
+                            <strong>{{ booking['customer_name'] }}</strong>
+                        </td>
+                        <td>
+                            <span class="badge bg-light text-dark border">{{ booking['waste_type'] }}</span>
+                            <div class="small text-muted mt-1">
+                                <i class="fas fa-calendar-day me-1"></i>{{ booking['booking_date'] }}<br>
+                                <i class="fas fa-clock me-1"></i>{{ booking['time_slot'] }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <span class="small">{{ booking['address'] }}</span>
+                                <a href="https://www.google.com/maps/search/?api=1&query={{ booking['address']|urlencode }}" 
+                                   target="_blank" class="btn btn-outline-success btn-sm ms-2" title="View on Map">
+                                    <i class="fas fa-map-marked-alt"></i>
+                                </a>
+                            </div>
+                        </td>
+                        <td>
+                            {% if booking['status'] == 'Pending' %}
+                                <span class="badge bg-warning text-dark"><i class="fas fa-hourglass-half me-1"></i>{{ booking['status'] }}</span>
+                            {% else %}
+                                <span class="badge bg-info"><i class="fas fa-truck me-1"></i>{{ booking['status'] }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <form action="/assign_worker" method="POST" class="d-flex gap-2">
+                                <input type="hidden" name="booking_id" value="{{ booking['id'] }}">
+                                <select name="worker_id" class="form-select form-select-sm" required style="min-width: 130px;">
+                                    <option value="">Select Worker</option>
+                                    {% for worker in workers %}
+                                    <option value="{{ worker['id'] }}">{{ worker['username'] }}</option>
+                                    {% endfor %}
+                                </select>
+                                <button type="submit" class="btn btn-earth btn-sm">Assign</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center py-5">
+                            <i class="fas fa-check-circle fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No pending or assigned requests at the moment.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

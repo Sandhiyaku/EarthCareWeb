@@ -1,0 +1,18 @@
+body {
+    /* Greenish overlay + Image */
+    background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), 
+                url('../images/watermark.png');
+    background-size: cover;
+    background-attachment: fixed; /* Keeps image still while scrolling */
+    background-position: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #2E7D32; /* Earthy Green Text */
+}
+
+.card {
+    /* Glassmorphism effect for attractive containers */
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(5px); 
+    border: 1px solid rgba(46, 125, 50, 0.2);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}

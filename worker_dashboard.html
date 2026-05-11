@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="text-center mb-4">
+        <h2 style="color: #2E7D32;"><i class="fas fa-tools me-2"></i>Worker Field View</h2>
+        <p class="text-muted">Hello, {{ session['username'] }}! Here are your assigned pickups.</p>
+    </div>
+
+    <div class="row justify-content-center">
+        {% for task in tasks %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="glass-card h-100 border-start border-primary border-5 shadow-sm">
+                <div class="d-flex justify-content-between align-items-start">
+                    <h5 class="card-title text-success fw-bold">
+                        <i class="fas fa-user me-2"></i>{{ task['customer_name'] }}
+                    </h5>
+                    <span class="badge bg-info">Assigned</span>
+                </div>
+                <hr>
+                
+                <p class="mb-2"><strong><i class="fas fa-recycle me-2 text-success"></i>Type:</strong> {{ task['waste_type'] }}</p>
+                <p class="mb-2"><strong><i class="fas fa-clock me-2 text-warning"></i>Slot:</strong> {{ task['booking_date'] }} ({{ task['time_slot'] }})</p>
+                <p class="mb-3"><strong><i class="fas fa-phone me-2 text-primary"></i>Contact:</strong> {{ task['customer_phone'] }}</p>
+                
+                <div class="bg-light p-3 rounded mb-3 border">
+                    <p class="mb-1 fw-bold text-dark"><i class="fas fa-map-marker-alt me-2 text-danger"></i>Pickup Address:</p>
+                    <p class="small mb-3 text-muted">{{ task['address'] }}</p>
+                    
+                    <a href="https://www.google.com/maps/search/?api=1&query={{ task['address']|urlencode }}" 
+                       target="_blank" 
+                       class="btn btn-outline-primary btn-sm w-100 fw-bold">
+                        <i class="fas fa-directions me-2"></i>Get Directions
+                    </a>
+                </div>
+                
+                <form action="/complete_task/{{ task['id'] }}" method="POST">
+                    <button type="submit" class="btn btn-earth w-100 py-2 fw-bold">
+                        <i class="fas fa-check-double me-2"></i>Mark as Collected
+                    </button>
+                </form>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-md-8 text-center mt-5">
+            <div class="glass-card">
+                <i class="fas fa-thumbs-up fa-3x mb-3" style="color: #2E7D32;"></i>
+                <h4>Great Job!</h4>
+                <p class="text-muted">You have no pending collections. All caught up!</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

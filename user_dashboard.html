@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="glass-card">
+            <h3 style="color: #2E7D32;"><i class="fas fa-recycle me-2"></i>Book Pickup</h3>
+            <p class="text-muted small">Schedule a time for our workers to collect your waste.</p>
+            <hr>
+            <form action="/user_dashboard" method="POST">
+    <div class="mb-3">
+        <label class="form-label">Type of Waste</label>
+        <select name="waste_type" class="form-select" required>
+            <option value="Organic">Organic (Food/Garden)</option>
+            <option value="Plastic">Recyclable (Plastic/Paper)</option>
+            <option value="E-Waste">E-Waste (Electronics)</option>
+            <option value="General">General Household</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Preferred Date</label>
+        <input type="date" name="date" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Time Slot</label>
+        <select name="time" class="form-select" required>
+            <option value="Morning">Morning (8 AM - 12 PM)</option>
+            <option value="Afternoon">Afternoon (12 PM - 4 PM)</option>
+            <option value="Evening">Evening (4 PM - 8 PM)</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Collection Address</label>
+        <textarea name="address" class="form-control" rows="2" placeholder="Confirm your address" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-earth w-100">Schedule Pickup</button>
+</form>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="glass-card">
+            <h3 style="color: #2E7D32;"><i class="fas fa-list-ul me-2"></i>My Requests</h3>
+            <p class="text-muted small">Track the status of your sustainability contributions.</p>
+            <hr>
+            <div class="table-responsive">
+                <table class="table table-hover mt-2">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Date</th>
+                            <th>Waste Type</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for booking in bookings %}
+                        <tr>
+                            <td>{{ booking['booking_date'] }} <br><small class="text-muted">{{ booking['time_slot'] }}</small></td>
+                            <td>{{ booking['waste_type'] }}</td>
+                            <td>
+                                {% if booking['status'] == 'Pending' %}
+                                    <span class="badge bg-warning text-dark"><i class="fas fa-clock me-1"></i>Pending</span>
+                                {% elif booking['status'] == 'Assigned' %}
+                                    <span class="badge bg-primary"><i class="fas fa-truck me-1"></i>Assigned</span>
+                                {% else %}
+                                    <span class="badge bg-success"><i class="fas fa-check-circle me-1"></i>Completed</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="3" class="text-center py-4">You haven't made any bookings yet. Start today!</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
